@@ -9,10 +9,10 @@ function App() {
       {/* 섹션 2 - 챌린지 지도/미션 리스트 */}
       <Section2 />
       
-      {/* 섹션 3 - 미션 상세 & 인증 업로드 */}
+      {/* 섹션 3 - 미션 상세 & 챌린지 인증 */}
       <Section3 />
       
-      {/* 섹션 4 - 리워드 & 부산 XP 패스 (통합) */}
+      {/* 섹션 4 - BWAY 로컬패스 */}
       <Section4 />
     </div>
   );
@@ -25,24 +25,24 @@ function Section1() {
       <div className="logo-text">B-WAY</div>
       <h1 className="main-title">부산을 걷는 새로운 방법, B-WAY</h1>
       <div className="main-subtitle">
-        미션을 수행하며 부산을 여행하고<br />
-        챌린지 리워드로 로컬 상점에서 바로 쓰는 경험 플랫폼
+        🌊 미션을 수행하며 부산을 여행하고<br />
+        🎁 챌린지 리워드로 로컬 상점에서 바로 쓰는 경험 플랫폼
       </div>
       
       <div className="card">
-        <div className="badge">MVP Mockup · 부산 관광 챌린지</div>
+        <div className="badge">Early Access · 부산 관광 챌린지</div>
         
         <ol className="step-list">
           <li className="step-item">
-            <span className="step-item-title">1단계 · 미션 선택</span>
+            <span className="step-item-title">1단계  ·  미션 선택</span>
             <span className="step-item-desc">부산대·서면·해운대 챌린지 중 하나를 고른다.</span>
           </li>
           <li className="step-item">
-            <span className="step-item-title">2단계 · 현장 인증</span>
+            <span className="step-item-title">2단계  ·  현장 인증</span>
             <span className="step-item-desc">사진/영상으로 인증하면 자동 숏폼이 생성된다.</span>
           </li>
           <li className="step-item">
-            <span className="step-item-title">3단계 · 리워드 사용</span>
+            <span className="step-item-title">3단계  ·  리워드 사용</span>
             <span className="step-item-desc">모은 토큰을 카페·식당·체험 상점에서 바로 쓴다.</span>
           </li>
         </ol>
@@ -138,6 +138,83 @@ function Section2() {
         marker.bindPopup(`<strong style="font-size: 14px;">${loc.name}</strong><br><span style="font-size: 11px; color: #666;">${loc.type}</span>`);
       });
 
+      // 추천 경로 라인 추가 (실제 도로를 따라가는 곡선 경로)
+      const recommendedRoutes = [
+        {
+          // 부산대 -> 서면 (중간 지점 추가로 곡선 경로)
+          points: [
+            [35.2333, 129.0833], // 부산대
+            [35.2200, 129.0750], // 중간점 1
+            [35.2000, 129.0650], // 중간점 2
+            [35.1800, 129.0600], // 중간점 3
+            [35.1579, 129.0594]  // 서면
+          ],
+          name: '부산대 → 서면'
+        },
+        {
+          // 서면 -> 해운대 (해안가를 따라가는 곡선)
+          points: [
+            [35.1579, 129.0594], // 서면
+            [35.1600, 129.0800], // 중간점 1
+            [35.1620, 129.1200], // 중간점 2
+            [35.1631, 129.1636]  // 해운대
+          ],
+          name: '서면 → 해운대'
+        },
+        {
+          // 서면 -> 감천문화마을 (골목길 경로)
+          points: [
+            [35.1579, 129.0594], // 서면
+            [35.1400, 129.0500], // 중간점 1
+            [35.1200, 129.0300], // 중간점 2
+            [35.0976, 129.0104]  // 감천문화마을
+          ],
+          name: '서면 → 감천문화마을'
+        },
+        {
+          // 해운대 -> 광안리 (해안가 따라)
+          points: [
+            [35.1631, 129.1636], // 해운대
+            [35.1580, 129.1400], // 중간점 1
+            [35.1530, 129.1186]  // 광안리
+          ],
+          name: '해운대 → 광안리'
+        },
+        {
+          // 감천문화마을 -> 송도 (해안가 경로)
+          points: [
+            [35.0976, 129.0104], // 감천문화마을
+            [35.0900, 129.0150], // 중간점 1
+            [35.0850, 129.0170], // 중간점 2
+            [35.0789, 129.0186]  // 송도
+          ],
+          name: '감천문화마을 → 송도'
+        }
+      ];
+
+      recommendedRoutes.forEach((route) => {
+        if (route.points && route.points.length >= 2) {
+          const polyline = window.L.polyline(
+            route.points,
+            {
+              color: '#0088ff',
+              weight: 4,
+              opacity: 0.8,
+              dashArray: '15, 8',
+              className: 'recommended-route',
+              lineCap: 'round',
+              lineJoin: 'round',
+              smoothFactor: 1.0
+            }
+          ).addTo(map);
+          
+          // 경로에 애니메이션 효과
+          polyline.setStyle({
+            dashOffset: '0'
+          });
+        }
+      });
+
       // 실시간 유저 발자취 마커 (더미) - 더 많이 추가
       const userLocations = [
         { lat: 35.2350, lng: 129.0850 },
@@ -208,7 +285,7 @@ function Section2() {
       {/* 실시간 지도 영역 */}
       <div className="map-container">
         <div className="map-header">
-          <span className="map-badge">실시간</span>
+          <span className="map-badge">실시간 챌린지 맵</span>
           <span className="map-users-count">현재 372명 활동 중</span>
         </div>
         
@@ -300,11 +377,11 @@ function ChallengeCard({ title, location, desc, tags, reward, progress, particip
   );
 }
 
-// 섹션 3: 미션 상세 & 인증 업로드
+// 섹션 3: 미션 상세 & 챌린지 인증
 function Section3() {
   return (
     <section className="section">
-      <h2 className="section-title">미션 상세 & 인증 화면 예시</h2>
+      <h2 className="section-title">미션 상세 & 챌린지 인증</h2>
       <p className="section-subtitle">서면 Hidden Route 99 챌린지 상세 예시 화면</p>
       
       <div className="card">
@@ -347,33 +424,138 @@ function Section3() {
           </div>
         </div>
         
-        <div className="shorts-preview">
-          <div className="shorts-preview-title">자동 생성 숏폼 프리뷰</div>
-          <div className="shorts-step">클립 1 – 골목 입구</div>
-          <div className="shorts-step">클립 2 – 로컬 카페</div>
-          <div className="shorts-step">클립 3 – 야간 네온사인</div>
-          <div className="helper-text">
-            * 실제 서비스에서는 음악·자막이 자동 합성됨
+        {/* AI 쇼츠 제작 영역 */}
+        <div className="ai-shorts-section">
+          <div className="ai-shorts-header">
+            <div className="ai-icon">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* ChatGPT/Sora 스타일 AI 엔진 아이콘 */}
+                <circle cx="20" cy="20" r="18" fill="url(#aiGradient)" opacity="0.15"/>
+                {/* 스파크/번개 모양 (ChatGPT 스타일) */}
+                <path d="M20 6L23 14L31 17L23 20L20 28L17 20L9 17L17 14L20 6Z" fill="url(#aiGradient)" stroke="url(#aiGradient)" strokeWidth="1.5" strokeLinejoin="round"/>
+                {/* 중앙 원 (AI 코어) */}
+                <circle cx="20" cy="20" r="4" fill="url(#aiGradient)"/>
+                {/* 작은 스파크들 */}
+                <circle cx="12" cy="12" r="1.5" fill="url(#aiGradient)" opacity="0.8"/>
+                <circle cx="28" cy="12" r="1.5" fill="url(#aiGradient)" opacity="0.8"/>
+                <circle cx="12" cy="28" r="1.5" fill="url(#aiGradient)" opacity="0.8"/>
+                <circle cx="28" cy="28" r="1.5" fill="url(#aiGradient)" opacity="0.8"/>
+                <defs>
+                  <linearGradient id="aiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#0088ff" />
+                    <stop offset="50%" stopColor="#00a8ff" />
+                    <stop offset="100%" stopColor="#ff8c42" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <div>
+              <div className="shorts-preview-title">AI 자동 쇼츠 제작</div>
+              <div className="ai-status">처리 중...</div>
+            </div>
+          </div>
+          
+          {/* AI 처리 단계 */}
+          <div className="ai-processing-steps">
+            <div className="ai-step ai-step-completed">
+              <div className="ai-step-icon">✓</div>
+              <div className="ai-step-content">
+                <div className="ai-step-title">영상 분석 완료</div>
+                <div className="ai-step-desc">최적의 클립 구간 자동 추출</div>
+              </div>
+            </div>
+            
+            <div className="ai-step ai-step-completed">
+              <div className="ai-step-icon">✓</div>
+              <div className="ai-step-content">
+                <div className="ai-step-title">자동 편집 완료</div>
+                <div className="ai-step-desc">전환 효과 및 속도 조절 적용</div>
+              </div>
+            </div>
+            
+            <div className="ai-step ai-step-processing">
+              <div className="ai-step-icon ai-spinner">⚙</div>
+              <div className="ai-step-content">
+                <div className="ai-step-title">AI 자막 생성 중</div>
+                <div className="ai-step-desc">음성 인식 및 자막 자동 생성</div>
+                <div className="ai-progress-mini">
+                  <div className="ai-progress-mini-fill" style={{ width: '65%' }}></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="ai-step ai-step-pending">
+              <div className="ai-step-icon">○</div>
+              <div className="ai-step-content">
+                <div className="ai-step-title">배경 음악 추가</div>
+                <div className="ai-step-desc">분위기에 맞는 BGM 자동 선택</div>
+              </div>
+            </div>
+            
+            <div className="ai-step ai-step-pending">
+              <div className="ai-step-icon">○</div>
+              <div className="ai-step-content">
+                <div className="ai-step-title">최종 렌더링</div>
+                <div className="ai-step-desc">쇼츠 형식으로 최적화</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* 쇼츠 미리보기 */}
+          <div className="shorts-preview-card">
+            <div className="shorts-preview-header">
+              <span className="shorts-preview-badge">생성 중</span>
+              <span className="shorts-preview-time">예상 소요: 약 30초</span>
+            </div>
+            <div className="shorts-preview-video">
+              <div className="shorts-video-placeholder">
+                <div className="shorts-video-icon">🎬</div>
+                <div className="shorts-video-text">AI가 쇼츠를 제작하고 있습니다...</div>
+                <div className="shorts-video-progress">
+                  <div className="shorts-video-progress-bar">
+                    <div className="shorts-video-progress-fill"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="shorts-preview-info">
+              <div className="shorts-info-item">
+                <span className="shorts-info-label">클립 수:</span>
+                <span className="shorts-info-value">3개</span>
+              </div>
+              <div className="shorts-info-item">
+                <span className="shorts-info-label">예상 길이:</span>
+                <span className="shorts-info-value">15초</span>
+              </div>
+              <div className="shorts-info-item">
+                <span className="shorts-info-label">해상도:</span>
+                <span className="shorts-info-value">1080p</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="helper-text" style={{ marginTop: "12px" }}>
+            ✨ AI가 업로드한 영상을 분석하여 최적의 쇼츠를 자동으로 제작합니다
           </div>
         </div>
         
         <div className="button-group" style={{ marginTop: "20px" }}>
           <button className="button-primary">미션 완료 처리</button>
-          <button className="button-secondary">친구에게 공유</button>
+          <button className="button-secondary">공유</button>
         </div>
       </div>
     </section>
   );
 }
 
-// 섹션 4: 리워드 & 부산 XP 패스 (통합)
+// 섹션 4: BWAY 로컬패스
 function Section4() {
   return (
     <section className="section">
-      <h2 className="section-title">리워드 & 부산 XP 패스</h2>
+      <h2 className="section-title">BWAY 로컬패스</h2>
       <p className="section-subtitle">
-        챌린지를 깨면 부산 XP 토큰이 쌓이고<br />
-        부산 XP 패스로 로컬 상점에서 바로 사용 가능한 구조
+        챌린지를 깨면 BWAY 로컬패스 포인트 (XP)가 쌓이고<br />
+        BWAY 로컬패스로 로컬 상점에서 바로 사용 가능한 구조
       </p>
       
       {/* 내 지갑 */}

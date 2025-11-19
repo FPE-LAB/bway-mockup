@@ -1,6 +1,6 @@
 # 배포 가이드
 
-B-WAY 목업을 온라인에 배포하는 방법입니다.
+B-WAY 플랫폼을 온라인에 배포하는 방법입니다.
 
 ## 방법 1: Vercel (가장 간단, 추천 ⭐)
 
@@ -9,7 +9,7 @@ B-WAY 목업을 온라인에 배포하는 방법입니다.
 ```bash
 # Git 저장소 초기화 (이미 완료됨)
 git add .
-git commit -m "Initial commit: B-WAY MVP Mockup"
+git commit -m "Initial commit: B-WAY Early Access"
 
 # GitHub에서 새 저장소 생성 후:
 git remote add origin https://github.com/당신의사용자명/bway-mockup.git
