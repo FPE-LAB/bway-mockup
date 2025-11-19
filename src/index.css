@@ -222,6 +222,295 @@ body {
   color: #333;
 }
 
+/* 실시간 지도 컨테이너 */
+.map-container {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.map-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background-color: #ff4444;
+  color: #ffffff;
+  font-weight: 600;
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.map-users-count {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+}
+
+.interactive-map {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  background: linear-gradient(135deg, #c8e0f0 0%, #d4e8f5 50%, #e0f0fa 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 2px solid #9bc4d8;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 지도 배경 - 부산 지형 스타일 */
+.map-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* 해안선 */
+.coastline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, #3a7bc8 0%, #4a90e2 20%, #5ba3f0 40%, #6bb5ff 60%, rgba(107, 181, 255, 0.3) 80%, transparent 100%);
+  border-radius: 0 0 12px 12px;
+  opacity: 0.7;
+}
+
+/* 도로 */
+.road {
+  position: absolute;
+  background: rgba(80, 80, 80, 0.6);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.road-1 {
+  top: 20%;
+  left: 10%;
+  width: 60%;
+  height: 4px;
+  transform: rotate(25deg);
+}
+
+.road-2 {
+  top: 45%;
+  left: 20%;
+  width: 50%;
+  height: 4px;
+  transform: rotate(-15deg);
+}
+
+.road-3 {
+  top: 65%;
+  left: 30%;
+  width: 45%;
+  height: 4px;
+  transform: rotate(10deg);
+}
+
+/* 지역 구분 (건물/공간 느낌) */
+.area {
+  position: absolute;
+  background: rgba(180, 180, 180, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(150, 150, 150, 0.2);
+}
+
+.area-1 {
+  top: 10%;
+  left: 15%;
+  width: 25%;
+  height: 20%;
+}
+
+.area-2 {
+  top: 40%;
+  left: 50%;
+  width: 30%;
+  height: 25%;
+}
+
+.area-3 {
+  top: 55%;
+  left: 70%;
+  width: 20%;
+  height: 30%;
+}
+
+.map-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 102, 204, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 102, 204, 0.2) 1px, transparent 1px);
+  background-size: 25px 25px;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.map-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 15;
+}
+
+.marker-pin {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  animation: bounce-marker 2s infinite;
+}
+
+@keyframes bounce-marker {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.marker-label {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  color: #0066cc;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.marker-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 2px solid #0066cc;
+  border-radius: 50%;
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.user-footprint {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #ff4444;
+  border-radius: 50%;
+  z-index: 12;
+  animation: footprint-move 3s infinite;
+  box-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
+}
+
+@keyframes footprint-move {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding-top: 12px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #666;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot-active {
+  background-color: #ff4444;
+  animation: pulse-dot 2s infinite;
+}
+
+.legend-dot-completed {
+  background-color: #22c55e;
+}
+
+.legend-line {
+  width: 20px;
+  height: 2px;
+  background-color: #0066cc;
+  border-radius: 1px;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes pulse-marker {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+  }
+}
+
+/* Leaflet 지도 커스터마이징 */
+.leaflet-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
 .upload-area {
   background: #f9f9f9;
   border: 2px dashed #ccc;
@@ -445,6 +734,168 @@ body {
   margin-top: 8px;
 }
 
+/* 로컬패스 페이지 스타일 */
+.plan-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.plan-item {
+  border: 2px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+}
+
+.plan-free {
+  background: #f9f9f9;
+}
+
+.plan-premium {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+  border-color: #0066cc;
+}
+
+.plan-badge-premium {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: #0066cc;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.plan-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.plan-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0066cc;
+  margin-bottom: 12px;
+}
+
+.plan-period {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.plan-features li {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.store-category {
+  margin-top: 16px;
+}
+
+.category-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.store-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.store-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
+
+.store-info {
+  flex: 1;
+}
+
+.store-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.store-desc {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.store-benefit {
+  font-size: 11px;
+  color: #0066cc;
+  font-weight: 600;
+}
+
+.store-discount {
+  font-size: 11px;
+  color: #22c55e;
+  font-weight: 600;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.benefit-item {
+  text-align: center;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.benefit-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.benefit-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.benefit-desc {
+  font-size: 11px;
+  color: #666;
+  line-height: 1.4;
+}
+
 @media (max-width: 375px) {
   .section {
     padding: 32px 16px;
@@ -456,6 +907,14 @@ body {
   
   .card {
     padding: 16px;
+  }
+  
+  .interactive-map {
+    height: 240px;
+  }
+  
+  .benefit-grid {
+    grid-template-columns: 1fr;
   }
 }
 
